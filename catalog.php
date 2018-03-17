@@ -5,10 +5,7 @@
  * Time: 22:42
  * 2.活动分类界面的处理
  */
-$servername = "";
-$username = "jhz";
-$password = "lg280137!";
-$dbname = "yiban";
+require_once 'config.php';
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error)
     die("Connection failed: " . $conn->connect_error . "<br>");

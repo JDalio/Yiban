@@ -17,10 +17,6 @@ $api->bind($token);
 $userinfo = $api->request('user/me');
 $uid = $userinfo['info']['yb_userid'];
 //数据库
-$servername = "";
-$username = "jhz";
-$password = "lg280137!";
-$dbname = "yiban";
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error . "<br>");

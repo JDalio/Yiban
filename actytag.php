@@ -5,10 +5,7 @@
  * Time: 13:36
  * 1.首页加载时标签的详情查询与用户选择活动时加入user数据库,用mode来控制
  */
-$servername = "";
-$username = "jhz";
-$password = "lg280137!";
-$dbname = "yiban";
+require_once 'config.php';
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
     $myfile = fopen("newfile.txt", "w");

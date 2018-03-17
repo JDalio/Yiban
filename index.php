@@ -7,7 +7,7 @@
  */
 
 /* 包含配置文件 */
-require 'config.php';
+require_once 'config.php';
 /* appUrl为轻应用入口地址(主页地址)*/
 $appUrl = isset($config['CallBack']) ? $config['CallBack'] : 'javaScript:;';
 
