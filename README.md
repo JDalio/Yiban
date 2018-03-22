@@ -2,8 +2,8 @@
 ## config.php
 应用的配置和mysql的配置
 ## index.php
-对于新应用的授权,利用try后的重定向进行的授权
-try {
+对于新应用的授权,利用try后的重定向进行的授权\n
+try {\n
     //轻应用获取access_token，未授权则跳转至授权页面
     $info = $iapp->perform();
 } catch (YBException $ex) {
