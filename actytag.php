@@ -39,11 +39,20 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
     $stmt->close();
     $conn->close();
 } else if ($_GET['mode'] == '33') {//管理员删除单个活动
-    $conn->query("DELETE FROM putter WHERE id={$_GET['delid']}");
-    $result = $conn->query("SELECT * FROM putter WHERE id={$_GET['delid']}");
-    if ($result->num_rows == 0) {
-        echo "delsuccess";
+    
+    $delacty = $conn->prepare("DELETE FROM putter WHERE id=?");
+    $delacty->bind_param('i', $_GET['delid']);
+    $delacty->execute();
+    $delacty->close();
+    
+    $confirm = $conn->prepare("SELECT * FROM putter WHERE id=?");
+    $confirm->bind_param('i', $_GET['delid']);
+    $confirm->execute();
+    if ($confirm->num_rows == 0) {
+       echo "delsuccess";
     }
+    $confirm->close();
+  
 } else {//用户加入单个活动和管理员
     $token = isset($token) ? $token : $_GET['token'];
     /* 包含SDK */
