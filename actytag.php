@@ -8,7 +8,7 @@
 require_once 'config.php';
 $conn = new mysqli($servername, $username, $password, $dbname);
 if ($conn->connect_error) {
-    $myfile = fopen("newfile.txt", "w");
+    $myfile = fopen("/tmp/mysql_error.log", "w");
     fwrite($myfile, 'Mysqli connect error: ');
     fwrite($myfile, $conn->connect_error);
     fclose($myfile);
