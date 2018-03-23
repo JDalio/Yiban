@@ -52,7 +52,7 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
        echo "delsuccess";
     }
     $confirm->close();
-  
+    $conn->close();
 } else {//用户加入单个活动和管理员
     $token = isset($token) ? $token : $_GET['token'];
     /* 包含SDK */
@@ -86,15 +86,21 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
 
     $user = new user($api->request('user/me'));
     if ($_GET['mode'] == '32') {//管理员修改活动页面
+        
+        $stmt = $conn->prepare("SELECT id,aname,aimg,astart,aend,ascore,aticket FROM putter WHERE uid=?");
+        $stmt->bind_param('i',$user->uid);
+        $stmt->execute();
         $manage = array();
-        $manres = $conn->query("SELECT id,aname,aimg,astart,aend,ascore,aticket FROM putter WHERE uid={$user->uid}");
-        if ($manres->num_rows > 0) {
+        if ($stmt->num_rows > 0) {
+            $manres = $stmt->get_result();
             while ($row = $manres->fetch_assoc()) {
-                array_push($manage, $row);
+               array_push($manage, $row);
             }
         }
         echo json_encode($manage);
+        $stmt->close();
         $conn->close();
+        
     } else if ($_GET['mode'] == '2') {//用户加入单个活动
         $result = $conn->query("SELECT * FROM users WHERE actyid=" . $user->actyid);//有注入可能
         if ($result->num_rows != 0) {
@@ -108,11 +114,19 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
         }
         $conn->close();
     } else {//我的日历页面删除活动
-        $conn->query("DELETE FROM users WHERE uid={$user->uid} AND actyid={$user->actyid}");
-        $result = $conn->query("SELECT * FROM users WHERE uid={$user->uid} AND actyid={$user->actyid}");
-        if ($result->num_rows == 0) {
-            echo "删除成功!";
+        
+        $delcalendar = $conn->prepare("DELETE FROM users WHERE uid=? AND actyid=?");
+        $delcalendar->bind_param('ii',$user->uid,$user->actyid);
+        $delcalendar->execute();
+        $delcalendar->close();
+
+        $confirm = $conn->prepare("SELECT * FROM users WHERE uid=? AND actyid=?");
+        $confirm->bind_param('ii', $user->uid,$user->actyid);
+        $confirm->execute();
+        if ($confirm->num_rows == 0) {
+           echo "删除成功!";
         }
+        $confirm->close();
     }
 }
 ?>
