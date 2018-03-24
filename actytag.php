@@ -87,15 +87,21 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
     $user = new user($api->request('user/me'));
     if ($_GET['mode'] == '32') {//管理员修改活动页面
         
-        $stmt = $conn->prepare("SELECT id,aname,aimg,astart,aend,ascore,aticket FROM putter WHERE uid=?");
-        $stmt->bind_param('i',$user->uid);
-        $stmt->execute();
         $manage = array();
-        if ($stmt->num_rows > 0) {
-            $manres = $stmt->get_result();
-            while ($row = $manres->fetch_assoc()) {
-               array_push($manage, $row);
-            }
+        $note = array("id" => "", "aname" => "", "aimg" => "", "astart" => "", "aend" => "", "ascore" => "", "aticket" => "");
+        $stmt = $conn->prepare("SELECT id,aname,aimg,astart,aend,ascore,aticket FROM putter WHERE uid=?");
+        $stmt->bind_param('i', $user->uid);
+        $stmt->execute();
+        $stmt->bind_result($id,$aname,$aimg,$astart,$aend,$ascore,$aticket);
+        while ($stmt->fetch()) {
+            $note["id"]=$id; 
+            $note["aname"]=$aname;
+            $note["aimg"]=$aimg;
+            $note["astart"]=$astart;
+            $note["aend"]=$aend;
+            $note["ascore"]=$ascore;
+            $note["aticket"]=$aticket;
+            array_push($manage, $note);
         }
         echo json_encode($manage);
         $stmt->close();
