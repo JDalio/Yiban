@@ -358,6 +358,8 @@
         }
     });
 
+    
+    
     //管理员用户界面开始
     $(".manager").click(function () {
         if ($j('.ui-searchbar-text').html() == '活动管理') {
@@ -365,14 +367,18 @@
             $j('#putter-container').hide();
             getMainPage(32, $j('#tokentmp').html());
             //标签详情加载
+	    var delid=-1;
+	    var curtag;
             $j("#mainPage32").on("tap", ".tag", function () {
-                var delid = $(this).attr('id');
+                delid = $(this).attr('id');
+		curtag = $(this);
                 getTagDetails(1, delid, true);
-                $('#addcalendar').click(function () {
+               });
+	    $('#addcalendar').click(function () {
                     if ($('#addcalendar').html() == '删除活动') {
                         $('#addcalendar').html("正在发送请求...");
                         $j.get("actytag.php",
-                            {"mode": 33, 'delid': parseInt(delid) - 32},
+                            {"mode": 33, 'delid': parseInt(delid)-32},
                             function (data, status) {
                                 if (status == 'success') {
                                     if (data == "delsuccess") {
@@ -380,13 +386,14 @@
                                     }
                                     setTimeout(function () {
                                         $(".tagdetail").removeClass("show");
-                                        location.reload();
+                                        //location.reload();
+					curtag.remove();
                                     }, 1200);
                                 }
                             });
                     }
-                });
-            });
+               });
+
             $j('#manager-wrapper').show();
         } else {
             $j('.ui-searchbar-text').html('活动管理');
@@ -395,7 +402,6 @@
             $j('#manager-wrapper').hide();
         }
     });
-
     //当点击提交按钮时
     $j("#submitbtn").click(function () {
         if (testAll()) {
