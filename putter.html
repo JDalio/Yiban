@@ -378,7 +378,7 @@
                     if ($('#addcalendar').html() == '删除活动') {
                         $('#addcalendar').html("正在发送请求...");
                         $j.get("actytag.php",
-                            {"mode": 33, 'delid': parseInt(delid)-32},
+                            {"mode": 33, 'delid': parseInt(delid)-32, 'token':$j('#tokentmp').html()},
                             function (data, status) {
                                 if (status == 'success') {
                                     if (data == "delsuccess") {
