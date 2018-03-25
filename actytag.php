@@ -38,22 +38,7 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
     }
     $stmt->close();
     $conn->close();
-} else if ($_GET['mode'] == '33') {//管理员删除单个活动
-    
-    $delacty = $conn->prepare("DELETE FROM putter WHERE id=?");
-    $delacty->bind_param('i', $_GET['delid']);
-    $delacty->execute();
-    $delacty->close();
-    
-    $confirm = $conn->prepare("SELECT * FROM putter WHERE id=?");
-    $confirm->bind_param('i', $_GET['delid']);
-    $confirm->execute();
-    if ($confirm->num_rows == 0) {
-       echo "delsuccess";
-    }
-    $confirm->close();
-    $conn->close();
-} else {//用户加入单个活动和管理员
+} else {//用户加入单个活动和管理员操作
     $token = isset($token) ? $token : $_GET['token'];
     /* 包含SDK */
     require("./classes/yb-globals.inc.php");
@@ -107,7 +92,23 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
         $stmt->close();
         $conn->close();
         
-    } else if ($_GET['mode'] == '2') {//用户加入单个活动
+    } else if ($_GET['mode'] == '33') {//管理员删除单个活动
+    
+        $delacty = $conn->prepare("DELETE FROM putter WHERE WHERE uid=? AND id=?");
+        $delacty->bind_param('ii', $user->uid , $_GET['delid']);
+        $delacty->execute();
+        $delacty->close();
+
+        $confirm = $conn->prepare("SELECT * FROM putter id=?");
+        $confirm->bind_param('i', $_GET['delid']);
+        $confirm->execute();
+        if ($confirm->num_rows == 0) {
+           echo "delsuccess";
+        }
+        $confirm->close();
+        $conn->close();
+   }
+    else if ($_GET['mode'] == '2') {//用户加入单个活动
         $result = $conn->query("SELECT * FROM users WHERE actyid=" . $user->actyid);//有注入可能
         if ($result->num_rows != 0) {
             echo "repeated";
