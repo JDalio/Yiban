@@ -94,12 +94,12 @@ if ($_GET['mode'] == '0') {//首页加载时整个标签的查询
         
     } else if ($_GET['mode'] == '33') {//管理员删除单个活动
     
-        $delacty = $conn->prepare("DELETE FROM putter WHERE WHERE uid=? AND id=?");
+        $delacty = $conn->prepare("DELETE FROM putter WHERE uid=? AND id=?");
         $delacty->bind_param('ii', $user->uid , $_GET['delid']);
         $delacty->execute();
         $delacty->close();
 
-        $confirm = $conn->prepare("SELECT * FROM putter id=?");
+        $confirm = $conn->prepare("SELECT * FROM putter WHERE id=?");
         $confirm->bind_param('i', $_GET['delid']);
         $confirm->execute();
         if ($confirm->num_rows == 0) {
